@@ -1,9 +1,15 @@
+import { useStoreStore } from "@/store/store";
+
 const Contact = () => {
-    return (
-        <div>
-            <h1>Contact</h1>
-        </div>
-    )
-}
+  const { store } = useStoreStore();
+
+  console.log("store ", store);
+
+  return (
+    <div>
+      <h1>Contact</h1>
+    </div>
+  );
+};
 
 export default Contact;

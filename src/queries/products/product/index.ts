@@ -1,17 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import ProductService from "@/services/products";
+import { useQuery } from '@tanstack/react-query';
+import ProductService from '@/services/products';
+import { Product } from '@/types/products';
 
 const useGetProduct = (id: number | null) => {
-    const productService = new ProductService();
-    const { data, isLoading, isError } = useQuery({
-        queryKey: ['product', id],
-        queryFn: () => productService.getProductById(id ?? 0),
-        enabled: !!id,
-        select: (data) => data.data.product,
-        refetchOnWindowFocus: false,
-    });
+  const productService = new ProductService();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['product', id],
+    queryFn: () => productService.getProductById(id ?? 0),
+    enabled: !!id,
+    select: data => data.data.product as Product,
+    refetchOnWindowFocus: false,
+  });
 
-    return { product: data, isLoading, isError };
-}
+  return { product: data, isLoading, isError };
+};
 
 export default useGetProduct;

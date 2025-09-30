@@ -1,10 +1,12 @@
 const formatPrice = (price: number) => {
-    return price.toLocaleString('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    });
-}
+  const newPrice =price.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+  console.log("newPrice ", newPrice)
+  return newPrice;
+};
 
 export default formatPrice;

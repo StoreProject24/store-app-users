@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -36,9 +36,8 @@
 }
 
 @theme {
-  --font-poppins: "Poppins", sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
 }
-
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -155,7 +154,6 @@
     @apply bg-background text-foreground;
   }
 }
-
 
 /* src/styles/utilities.css */
 .line-clamp-2 {

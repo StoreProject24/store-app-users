@@ -1,14 +1,14 @@
-import { useCategoriesStore } from "@/store/categories";
+import { useCategoriesStore } from '@/store/categories';
 
 const useGetNameCategory = () => {
-   const { categories } = useCategoriesStore()
+  const { categories } = useCategoriesStore();
 
-   const getNameCategory = (categoryId: number | null) => {
-        if (!categoryId) return '';
-        return categories.find((category) => category.id === categoryId)?.name ?? '';
-   }
+  const getNameCategory = (categoryId: number | null) => {
+    if (!categoryId) return '';
+    return categories.find(category => category.id === categoryId)?.name ?? '';
+  };
 
-   return { getNameCategory };
-}
+  return { getNameCategory };
+};
 
 export default useGetNameCategory;

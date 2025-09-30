@@ -6,4 +6,4 @@ export type Brand = {
   status: number;
   createdAt: Date;
   updatedAt: Date;
-}
+};

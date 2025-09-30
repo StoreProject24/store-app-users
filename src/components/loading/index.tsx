@@ -1,17 +1,13 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 interface Props {
-    children: ReactNode;
-    isLoading: boolean;
-    component: ReactNode;
+  children: ReactNode;
+  isLoading: boolean;
+  component: ReactNode;
 }
 
 const Loading = ({ children, isLoading, component }: Props) => {
-    return (
-        <>
-            {isLoading ? component : children}
-        </>
-    )
-}
+  return <>{isLoading ? component : children}</>;
+};
 
 export default Loading;

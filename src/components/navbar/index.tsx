@@ -1,12 +1,8 @@
 import { useState } from 'react';
-import { Menu, ShoppingCart } from 'lucide-react'
-import { Link, useLocation } from 'react-router'
-import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+import { Menu, ShoppingCart } from 'lucide-react';
+import { Link, useLocation } from 'react-router';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Cart from '../cart';
 import useCart from '@/hooks/useCart';
 
@@ -15,33 +11,39 @@ export default function Navbar() {
   const pathName = useLocation().pathname;
   const isProductPage = pathName.includes('/products');
   const isContactPage = pathName.includes('/contact');
-  const isHomePage = pathName === ('/');
+  const isHomePage = pathName === '/';
   const { totalCartProducts } = useCart();
 
   const routes = [
     {
       label: 'Inicio',
       path: '/',
-      isActive: isHomePage
+      isActive: isHomePage,
     },
     {
       label: 'Productos',
       path: '/products',
-      isActive: isProductPage
+      isActive: isProductPage,
     },
     {
       label: 'Contacto',
       path: '/contact',
-      isActive: isContactPage
-    }
-  ]
+      isActive: isContactPage,
+    },
+  ];
 
   return (
     <header className="w-full px-8 py-3 bg-white flex justify-between items-center dark:bg-black">
-      <h1 className="text-xl font-bold font-poppins">Mi Tienda</h1>
+      <Link to="/">
+        <h1 className="text-xl font-bold font-poppins">Mi Tienda</h1>
+      </Link>
       <nav className="hidden md:flex gap-6 items-center">
-        {routes.map((route) => (
-          <Link to={route.path} key={route.label} className={`text-lg font-medium hover:underline font-poppins ${route.isActive ? 'text-blue-500' : 'text-gray-600 '}`}>
+        {routes.map(route => (
+          <Link
+            to={route.path}
+            key={route.label}
+            className={`text-lg font-medium hover:underline font-poppins ${route.isActive ? 'text-blue-500' : 'text-gray-600 '}`}
+          >
             {route.label}
           </Link>
         ))}
@@ -85,8 +87,13 @@ export default function Navbar() {
           </SheetTrigger>
           <SheetContent side="left" className="w-72">
             <nav className="mt-4 flex flex-col gap-4 p-4">
-              {routes.map((route) => (
-                <Link to={route.path} key={route.label} onClick={() => setIsMenuOpen(false)} className={`text-lg font-medium hover:underline font-poppins ${route.isActive ? 'text-blue-500' : 'text-gray-600 '}`}>
+              {routes.map(route => (
+                <Link
+                  to={route.path}
+                  key={route.label}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`text-lg font-medium hover:underline font-poppins ${route.isActive ? 'text-blue-500' : 'text-gray-600 '}`}
+                >
                   {route.label}
                 </Link>
               ))}
@@ -95,5 +102,5 @@ export default function Navbar() {
         </Sheet>
       </div>
     </header>
-  )
+  );
 }
