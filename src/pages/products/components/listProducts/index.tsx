@@ -18,12 +18,13 @@ const ListProducts = ({ products, lastElementRef, handleProduct }: Props) => {
   } = useCart();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+    <div className="w-full grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4">
       {products.map((product, index) => {
         const isLast = index === products.length - 1;
         return (
           <CardProduct
             key={product.id}
+            className="w-full flex-1"
             product={product}
             isLast={isLast}
             lastElementRef={lastElementRef}

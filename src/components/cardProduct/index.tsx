@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Product } from '@/types/products';
 import formatPrice from '@/lib/formatPrice';
 import { CartItem } from '@/store/cart/type';
+import { ClassNameValue, twMerge } from 'tailwind-merge';
 
-interface CardProductProps {
+interface Props {
   product: Product;
   isLast?: boolean;
   lastElementRef?: React.RefObject<HTMLDivElement>;
@@ -14,28 +15,30 @@ interface CardProductProps {
   handleDecreaseQuantityProduct: (id: number, product: Product) => void;
   handleIncreaseQuantityProduct: (product: Product) => void;
   isProductInCart: CartItem | undefined;
+  className?: ClassNameValue;
 }
 
 const CardProduct = ({
   product,
   isLast,
   lastElementRef,
-  handleProduct,
   isProductInCart,
+  className = "",
+  handleProduct,
   handleAddCart,
   handleDecreaseQuantityProduct,
   handleIncreaseQuantityProduct,
-}: CardProductProps) => {
+}: Props) => {
   return (
     <Card
-      className="w-full h-90 rounded-2xl p-4 flex flex-col relative gap-0"
+      className={twMerge("p-4", className)}
       ref={isLast ? lastElementRef : null}
     >
       <CardHeader className="m-0 p-0 relative">
         <img
           src={product.images?.[0]?.urlImage ?? 'https://placehold.co/600x400'}
           alt={product.name}
-          className="object-cover h-52 rounded-2xl w-full"
+          className="object-cover h-52 w-full rounded-2xl"
         />
         <Button
           variant="default"

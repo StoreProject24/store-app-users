@@ -52,7 +52,7 @@ const Product = () => {
         </div>
 
         <div className="w-full sm:w-1/2 h-[40rem] rounded-xl">
-          <img src={product?.images?.[activeImage].urlImage} alt={product?.name} className="w-full h-full object-cover rounded-xl" />
+          <img src={product?.images?.[activeImage]?.urlImage ?? 'https://placehold.co/600x400'} alt={product?.name} className="w-full h-full object-cover rounded-xl" />
         </div>
         <div className='md:hidden flex flex-row gap-5 w-full overflow-x-auto pb-2'>
           {product?.images?.map((image, index) => {
