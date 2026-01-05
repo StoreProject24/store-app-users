@@ -8,7 +8,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi
+  type CarouselApi,
 } from '@/components/ui/carousel';
 import { useCategoriesStore } from '@/store/categories';
 
@@ -23,7 +23,7 @@ export default function Categories() {
   const handleCategory = useCallback(
     (id: number) => {
       navigate(`/products?categoryIds=${id}`, {
-        flushSync: true
+        flushSync: true,
       });
     },
     [navigate]
@@ -33,13 +33,15 @@ export default function Categories() {
     setCurrentIndex(api?.selectedScrollSnap() ?? 0);
   }, []);
 
-  const onInit = useCallback((api: CarouselApi) => {
-    apiRef.current = api;
-    setTotalSlides(api?.scrollSnapList().length ?? 0);
-    onSelect(api);
-    api?.on('select', () => onSelect(api));
-  }, [onSelect]);
-
+  const onInit = useCallback(
+    (api: CarouselApi) => {
+      apiRef.current = api;
+      setTotalSlides(api?.scrollSnapList().length ?? 0);
+      onSelect(api);
+      api?.on('select', () => onSelect(api));
+    },
+    [onSelect]
+  );
 
   return (
     <article className="py-8">
@@ -87,8 +89,9 @@ export default function Categories() {
           {Array.from({ length: totalSlides }).map((_, index) => (
             <div
               key={`${index}-${currentIndex}`}
-              className={`w-3 h-3 rounded-full border border-black transition-colors ${index === currentIndex ? 'bg-black' : 'bg-white'
-                }`}
+              className={`w-3 h-3 rounded-full border border-black transition-colors ${
+                index === currentIndex ? 'bg-black' : 'bg-white'
+              }`}
             />
           ))}
         </div>

@@ -4,7 +4,7 @@ import './App.css';
 import Home from './pages/home';
 import Products from './pages/products';
 import { Layout } from './components';
-import Product from './pages/products/product';
+import Product from './pages/products/modules/product';
 import StoreContext from './context/store';
 import Contact from './pages/contact';
 import ScrollToTop from './components/scrollTop';

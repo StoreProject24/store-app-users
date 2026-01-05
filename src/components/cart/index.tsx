@@ -25,7 +25,6 @@ const Cart = () => {
 
   const handleSendOrder = () => {
     const order = formatOrder();
-    console.log(order);
     const phone = '573227537385';
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
     window.open(url, '_blank');

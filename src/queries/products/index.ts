@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useLocation } from 'react-router'; 
+import { useLocation } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { Product } from '@/types/products';
 import ProductService from '../../services/products';
@@ -43,8 +43,6 @@ const useGetProducts = () => {
   }, [search, categories, page]);
 
   useEffect(() => {
-    console.log('Current URL in useGetProducts:', location.pathname + location.search);
-    console.log('Page:', page, 'Search:', search, 'Categories:', categories);
     if (!query.data || !query.data.data?.products) return;
 
     const newProducts = query.data.data.products;
@@ -84,7 +82,7 @@ const useGetProducts = () => {
     setSearch: safeSetSearch,
     setCategories: safeSetCategories,
     isError: query.isError,
-    isLoadingProducts: query.isLoading,
+    isLoadingProducts: page === 1 ? query.isLoading : false,
     isFetching: query.isFetching,
     products,
     hasMore,

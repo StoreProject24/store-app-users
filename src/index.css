@@ -38,6 +38,11 @@
 @theme {
   --font-poppins: 'Poppins', sans-serif;
 }
+@layer base {
+  body {
+    font-family: var(--font-poppins);
+  }
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

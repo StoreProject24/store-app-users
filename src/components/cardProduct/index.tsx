@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/products';
@@ -23,17 +23,14 @@ const CardProduct = ({
   isLast,
   lastElementRef,
   isProductInCart,
-  className = "",
+  className = '',
   handleProduct,
   handleAddCart,
   handleDecreaseQuantityProduct,
   handleIncreaseQuantityProduct,
 }: Props) => {
   return (
-    <Card
-      className={twMerge("p-4", className)}
-      ref={isLast ? lastElementRef : null}
-    >
+    <Card className={twMerge('p-4', className)} ref={isLast ? lastElementRef : null}>
       <CardHeader className="m-0 p-0 relative">
         <img
           src={product.images?.[0]?.urlImage ?? 'https://placehold.co/600x400'}

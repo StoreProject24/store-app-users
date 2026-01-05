@@ -10,7 +10,15 @@ const useCart = () => {
     (product: Product) => {
       const isProductInCart = cart.find(item => item.id === product.id);
       if (!isProductInCart) {
-        addCart({ ...product, quantity: 1 });
+        addCart({ ...product, quantity: product.quantity || 1 });
+      } else {
+        cart.map(item => {
+          if (item.id === product.id) {
+            item.quantity = product.quantity;
+          }
+        });
+        removeCart(product.id);
+        addCart(product);
       }
     },
     [cart, addCart]
