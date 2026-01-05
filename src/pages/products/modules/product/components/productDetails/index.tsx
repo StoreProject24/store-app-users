@@ -39,7 +39,7 @@ const ProductDetails = ({
       <div className="flex flex-col gap-5 w-full sm:flex-col justify-between">
         <h5 className="text-xl font-bold font-poppins">{formatPrice(product?.pricePublic || 0)}</h5>
         <div className="flex flex-col gap-5 w-full px-2 h-108 overflow-y-auto">
-          <QuantitySelector quantity={quantity} disabled={false} handleQuantity={handleQuantity} />
+          <QuantitySelector quantity={quantity} disabled={false} handleQuantity={(v) => handleQuantity(v, 0)} />
           <Button
             className="w-full"
             onClick={() => {

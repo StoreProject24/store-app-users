@@ -3,7 +3,7 @@ import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 import { Category } from '@/types/category';
 
 type CategoriesState = {
-  categories: Category[] | [];
+  categories: Category[];
   setCategories: (data: Category[]) => void;
 };
 
