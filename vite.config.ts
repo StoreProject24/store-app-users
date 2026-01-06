@@ -8,7 +8,12 @@ export default defineConfig({
     // host: true,
     port: 5174,
   },
-
+  base: '/',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
