@@ -1,26 +1,27 @@
 # Etapa 1: Build
-FROM node:22.0.0-alpine AS builder
+FROM node:22-alpine AS builder
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
-
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
 RUN pnpm run build
 
-# Etapa 2: Servir
-FROM node:22.0.0-alpine
+# Etapa 2: Nginx
+FROM nginx:stable-alpine
 
-WORKDIR /app
+# Eliminar config por defecto
+RUN rm /etc/nginx/conf.d/default.conf
 
-RUN npm install -g serve
+# Config custom para Cloud Run
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=builder /app/dist ./dist
+# Copiar build
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 8080
 
-# 🔑 CLAVE: usar $PORT y 0.0.0.0
-CMD ["sh", "-c", "serve -s dist -l tcp://0.0.0.0:$PORT"]
+CMD ["nginx", "-g", "daemon off;"]
