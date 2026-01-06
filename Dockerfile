@@ -1,4 +1,4 @@
-# Multi-stage build optimizado para Cloud Run con pnpm
+# Dockerfile para servir app Vite con Node.js (sin Nginx)
 
 # Etapa 1: Build
 FROM node:22.0.0-alpine AS builder
@@ -20,23 +20,19 @@ COPY . .
 # Build
 RUN pnpm run build
 
-# Etapa 2: Servir con Nginx
-FROM nginx:alpine
+# Etapa 2: Servir con serve (Node.js)
+FROM node:22.0.0-alpine
 
-# Copiar build
-COPY --from=builder /app/dist /usr/share/nginx/html
+WORKDIR /app
 
-# Configuración de nginx para SPA (React Router, Vue Router, etc)
-RUN echo 'server { \
-    listen 8080; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Instalar serve (servidor estático simple)
+RUN npm install -g serve
 
-# Cloud Run usa el puerto 8080 por defecto
+# Copiar build desde etapa anterior
+COPY --from=builder /app/dist ./dist
+
+# Exponer puerto 8080
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+# Servir la app en puerto 8080
+CMD ["serve", "-s", "dist", "-l", "8080"]
