@@ -45,7 +45,7 @@ export type OptionsVariantType = {
 };
 
 export type VariantsCombinations = {
-  id: string;
+  id: number;
   values: string[];
   price: number;
   pricePublic: number;

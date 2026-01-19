@@ -5,13 +5,13 @@ import formatPrice from '@/lib/formatPrice';
 import useGetNameCategory from '@/hooks/useGetNameCategory';
 const Cart = () => {
   const { getNameCategory } = useGetNameCategory();
-  const { cart, handleRemoveCart, totalPriceCartProducts } = useCart();
+  const { cart, removeCart, totalPriceCartProducts } = useCart();
 
   const formatOrder = () => {
     const itemsList = cart
       .map(
         item =>
-          `• ${item.name} x${item.quantity} - ${formatPrice(item.pricePublic * item.quantity)}`
+          `• ${item.name} ${item.combinationId && `- ${item.variantName}`} x${item.quantity} - ${formatPrice(item.pricePublic * item.quantity)}`
       )
       .join('\n');
     return (
@@ -42,17 +42,16 @@ const Cart = () => {
         <>
           <div className="overflow-y-auto h-[calc(100vh-17rem)] sm:h-[calc(100vh-12rem)]">
             {cart.map(item => (
-              <div key={item.id} className="flex flex-row justify-between w-full gap-2 p-2">
+              <div key={item.key} className="flex flex-row justify-between w-full gap-2 p-2">
                 <img
-                  src={item.images?.[0]?.urlImage ?? 'https://placehold.co/600x400'}
+                  src={item.image ?? 'https://placehold.co/600x400'}
                   alt={item.name}
                   className="w-0 h-0 sm:w-12 sm:h-12 rounded-full"
                 />
                 <div className="flex flex-row justify-between items-center w-full gap-2">
                   <div className="flex-col justify-start items-center gap-2 w-36">
-                    <p className="text-sm font-medium font-poppins dark:text-white text-ellipsis text-nowrap overflow-hidden">
-                      {item.name}
-                      wefpowekfopewkfowekfpowekpfowfkopwekfowekofpwckwemdkwedmoewmdoiewdmowemdo
+                    <p className="text-sm font-medium font-poppins dark:text-white text-ellipsis  overflow-hidden">
+                      {item.name} {item.combinationId && `~ ${item.variantName}`} 
                     </p>
                     <p className="text-xs font-poppins text-gray-500 text-ellipsis text-nowrap overflow-hidden">
                       {getNameCategory(item.categoryId)}
@@ -73,7 +72,7 @@ const Cart = () => {
                   className="flex  justify-center cursor-pointer items-center"
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleRemoveCart(item.id)}
+                  onClick={() => removeCart(item.key)}
                 >
                   <Trash className="w-4 h-4" />
                 </Button>

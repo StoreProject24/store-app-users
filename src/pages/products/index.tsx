@@ -61,7 +61,7 @@ const Products = () => {
     <section className="px-8 pb-4 flex flex-col justify-center">
       <Filters handleSearch={handleSearch} handleCategories={handleCategories} />
       <div className="flex flex-col justify-center items-center">
-        <Loading isLoading={isLoadingProducts} component={<ProductCardSkeleton />}>
+        <Loading isLoading={isLoadingProducts} component={<ProductCardSkeleton limit={14} />}>
           {products.length === 0 && !isLoadingProducts && <EmptyProducts />}
           <ListProducts
             products={products}

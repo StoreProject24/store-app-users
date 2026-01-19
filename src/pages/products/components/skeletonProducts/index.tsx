@@ -1,6 +1,10 @@
 import { useCallback } from 'react';
 
-const ProductCardSkeleton = () => {
+interface Props {
+  limit: number
+}
+
+const ProductCardSkeleton = ({limit}: Props) => {
   const SkeletonCard = useCallback(
     () => (
       <div className="flex-1 w-full p-4 rounded-xl bg-gray-100 dark:bg-gray-800">
@@ -19,7 +23,7 @@ const ProductCardSkeleton = () => {
   );
   return (
     <div className="w-full grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 animate-pulse">
-      {Array.from({ length: 14 }).map((_, index) => (
+      {Array.from({ length: limit }).map((_, index) => (
         <SkeletonCard key={index + 2} />
       ))}
     </div>

@@ -64,14 +64,14 @@ const Product = () => {
           />
         </div>
       </div>
-      <div className="">
+      <div>
         <div className="flex flex-row items-center justify-center gap-4 my-8">
           <div className="border-t-2 border-gray-500 w-full rounded-full" />
           <h2 className="text-2xl font-bold text-center mb-4 w-1/2">Productos relacionados</h2>
           <div className="border-t-2 border-gray-500 w-full rounded-full" />
         </div>
         <div className="flex justify-center">
-          <div className="flex flex-row gap-8 mt-4 overflow-x-auto pb-4">
+          <div className="flex flex-row gap-8 mt-4 overflow-x-auto pb-4 w-full">
             {typeof product?.id === 'number' && typeof product?.categoryId === 'number' ? (
               <ProductsRelated productId={product.id} categoryId={product.categoryId} />
             ) : null}

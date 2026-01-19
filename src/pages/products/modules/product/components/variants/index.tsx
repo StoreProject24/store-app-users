@@ -4,14 +4,16 @@ import { Button } from '@/components/ui/button';
 import formatPrice from '@/lib/formatPrice';
 import { cn } from '@/lib/utils';
 import { Product } from '@/types/products';
+import { CartItem } from '@/types/cart';
 
 interface Props {
   product: Product;
-  quantity: number;
-  handleQuantity: (v: 'increment' | 'decrement' | 'reset' | 'load') => void;
+  variantQuantities: Record<number, number>;
+  handleVariantQuantity: (id: number, v: 'increment' | 'decrement' | 'reset' | 'load') => void;
+  handleAddCart: (v: Omit<CartItem, 'key'>) => void;
 }
 
-const ProductWithVariants = ({ product, quantity, handleQuantity }: Props) => {
+const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity, handleAddCart }: Props) => {
   const [selectedOptions, setSelectedOptions] = useState<Record<number, number>>({});
 
   const selectedCombination = useMemo(() => {
@@ -25,6 +27,23 @@ const ProductWithVariants = ({ product, quantity, handleQuantity }: Props) => {
       comb.values.some(v => v.option.typeId === typeId && v.optionId === optionId)
     );
   };
+
+  const currentQuantity = selectedCombination
+    ? variantQuantities[selectedCombination.id] ?? 1
+    : 1;
+
+    const variantName = useMemo(() => {
+      if (!selectedCombination) return '';
+    
+      return selectedCombination.values
+        .map(v => {
+          const type = product.variantTypes.find(t => t.id === v.option.typeId);
+          return type
+            ? `${type.name}: ${v.option.name}`
+            : v.option.name;
+        })
+        .join(' - ');
+    }, [selectedCombination, product.variantTypes]);
 
   return (
     <>
@@ -41,14 +60,11 @@ const ProductWithVariants = ({ product, quantity, handleQuantity }: Props) => {
                   key={option.id}
                   onClick={() => {
                     if (!isAvailable) return;
-                    console.log("option", option)
                     setSelectedOptions(prev => ({
                       ...prev,
                       [type.id]: option.id,
                     }));
-                    if (quantity !== 1) {
-                      handleQuantity('decrement');
-                    }
+                    handleVariantQuantity(0, "reset")
                   }}
                   className={cn(
                     'px-3 py-1 rounded border text-sm transition',
@@ -66,9 +82,11 @@ const ProductWithVariants = ({ product, quantity, handleQuantity }: Props) => {
       ))}
       {selectedCombination && selectedCombination.quantity > 1 && (
         <QuantitySelector
-          quantity={quantity}
-          disabled={quantity >= selectedCombination.quantity}
-          handleQuantity={handleQuantity}
+          quantity={currentQuantity}
+          disabled={currentQuantity >= selectedCombination.quantity}
+          handleQuantity={(type) => {
+            handleVariantQuantity(selectedCombination.id, type)
+          }}
         />
       )}
 
@@ -96,12 +114,19 @@ const ProductWithVariants = ({ product, quantity, handleQuantity }: Props) => {
         className="w-full"
         onClick={() => {
           if (!selectedCombination) return;
-
-          console.log({
-            productId: product?.id,
+          console.log("selectedCombination.values[0] ", selectedCombination)
+          handleAddCart({
+            productId: product.id,
             combinationId: selectedCombination.id,
-            quantity,
+            name: product.name,
+            pricePublic: selectedCombination.pricePublic,
+            quantity: currentQuantity,
+            variantName,
+            stock: selectedCombination.quantity,
+            image: product.images?.[0]?.urlImage,
+            categoryId: product.categoryId,
           });
+          
         }}
       >
         Agregar al carrito

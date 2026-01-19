@@ -3,19 +3,24 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/products';
 import formatPrice from '@/lib/formatPrice';
-import { CartItem } from '@/store/cart/type';
+import { CartItem } from '@/types/cart';
 import { ClassNameValue, twMerge } from 'tailwind-merge';
 
 interface Props {
   product: Product;
   isLast?: boolean;
   lastElementRef?: React.RefObject<HTMLDivElement>;
+  isProductInCart: boolean;
+  cartItem?: CartItem;
+  className?: ClassNameValue;
+  // handleProduct: (id: number) => void;
+  // handleAddCart: (product: Product) => void;
+  // handleDecreaseQuantityProduct: (id: number, product: Product) => void;
+  // handleIncreaseQuantityProduct: (product: Product) => void;
   handleProduct: (id: number) => void;
   handleAddCart: (product: Product) => void;
   handleDecreaseQuantityProduct: (id: number, product: Product) => void;
   handleIncreaseQuantityProduct: (product: Product) => void;
-  isProductInCart: CartItem | undefined;
-  className?: ClassNameValue;
 }
 
 const CardProduct = ({
@@ -23,6 +28,7 @@ const CardProduct = ({
   isLast,
   lastElementRef,
   isProductInCart,
+  cartItem,
   className = '',
   handleProduct,
   handleAddCart,
@@ -58,7 +64,7 @@ const CardProduct = ({
           <p className="text-xl font-bold text-black max-w-52 text-ellipsis overflow-hidden font-poppins dark:text-white">
             {formatPrice(product.pricePublic)}
           </p>
-          {isProductInCart ? (
+          {isProductInCart && cartItem ? (
             <div className="flex flex-row justify-between items-center gap-2">
               <Button
                 variant="default"
@@ -67,8 +73,8 @@ const CardProduct = ({
               >
                 -
               </Button>
-              <p className="text-xs font-poppins dark:text-white">{isProductInCart.quantity}</p>
-              {isProductInCart.quantity < product.quantity && (
+              <p className="text-xs font-poppins dark:text-white">{cartItem.quantity}</p>
+              {cartItem.quantity < product.quantity && (
                 <Button
                   variant="default"
                   className="text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white"
@@ -82,9 +88,15 @@ const CardProduct = ({
             <Button
               variant="default"
               className="text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white"
-              onClick={() => handleAddCart(product)}
+              onClick={() => {
+                if (product?.variantTypes?.length) {
+                  handleProduct(product.id)
+                }else {
+                  handleAddCart(product)
+                }
+              }}
             >
-              Agregar
+              {product?.variantTypes?.length ? "Variantes": "Agregar"}
             </Button>
           )}
         </div>

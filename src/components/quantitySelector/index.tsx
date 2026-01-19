@@ -3,7 +3,7 @@ import { Props } from './type';
 const QuantitySelector = ({ quantity, disabled, handleQuantity }: Props) => {
   return (
     <div className="flex items-center justify-between gap-4 my-2">
-      <span className="text-sm font-medium">Cantidad</span>
+      <span className="font-semibold underline">Cantidad</span>
       <div className="flex items-center border rounded">
         <button
           onClick={() => handleQuantity('decrement')}

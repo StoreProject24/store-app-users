@@ -1,88 +1,91 @@
 import { useCallback, useMemo } from 'react';
 import { useCartStore } from '@/store/cart';
-import { Product } from '@/types/products';
+import { CartItem, getCartKey } from '@/types/cart';
 
 const useCart = () => {
-  const { cart, addCart, removeCart, clearCart, increaseQuantityProduct, decreaseQuantityProduct } =
-    useCartStore();
+  const {
+    cart,
+    addCart,
+    removeCart,
+    clearCart,
+    increaseQuantityProduct,
+    decreaseQuantityProduct,
+  } = useCartStore();
 
+  // ➕ AGREGAR AL CARRITO
   const handleAddCart = useCallback(
-    (product: Product) => {
-      const isProductInCart = cart.find(item => item.id === product.id);
-      if (!isProductInCart) {
-        addCart({ ...product, quantity: product.quantity || 1 });
+    (item: Omit<CartItem, 'key'>) => {
+      const key = getCartKey(item.productId, item.combinationId);
+
+      const existing = cart.find(cartItem => cartItem.key === key);
+
+      if (!existing) {
+        addCart({ ...item, key });
       } else {
-        cart.map(item => {
-          if (item.id === product.id) {
-            item.quantity = product.quantity;
-          }
-        });
-        removeCart(product.id);
-        addCart(product);
+        if (existing.quantity + item.quantity > existing.stock) return;
+
+        increaseQuantityProduct(key);
       }
     },
-    [cart, addCart]
+    [cart, addCart, increaseQuantityProduct]
   );
 
+  // ➕➖ CANTIDAD
   const handleIncreaseQuantityProduct = useCallback(
-    (product: Product) => {
-      const isProductInCart = cart.find(item => item.id === product.id);
-      if (isProductInCart) {
-        if (isProductInCart.quantity < product.quantity) {
-          increaseQuantityProduct(product.id);
-        }
+    (key: string) => {
+      const item = cart.find(i => i.key === key);
+      if (item && item.quantity < item.stock) {
+        increaseQuantityProduct(key);
       }
     },
     [cart, increaseQuantityProduct]
   );
 
   const handleDecreaseQuantityProduct = useCallback(
-    (id: number, product: Product) => {
-      const isProductInCart = cart.find(item => item.id === product.id);
-      if (isProductInCart) {
-        if (isProductInCart.quantity !== 0) {
-          if (isProductInCart.quantity - 1 === 0) {
-            removeCart(id);
-          } else {
-            decreaseQuantityProduct(product.id);
-          }
-        }
+    (key: string) => {
+      const item = cart.find(i => i.key === key);
+      if (!item) return;
+
+      if (item.quantity === 1) {
+        removeCart(key);
+      } else {
+        decreaseQuantityProduct(key);
       }
     },
     [cart, removeCart, decreaseQuantityProduct]
   );
 
-  const handleRemoveCart = useCallback((id: number) => removeCart(id), [removeCart]);
-
   const handleProductInCart = useCallback(
-    (id: number) => {
-      return cart.find(item => item.id === id);
+    (productId: number, combinationId?: number) => {
+      const key = `${productId}-${combinationId ?? 'simple'}`;
+      return cart.find(item => item.key === key);
     },
     [cart]
   );
+  
 
-  const totalCartProducts = useMemo(() => {
-    return cart.length;
-  }, [cart]);
+  // 🧮 TOTALES
+  const totalCartProducts = cart.length
 
-  const totalPriceCartProducts = useMemo(() => {
-    return cart.reduce((acc, item) => acc + item.pricePublic * item.quantity, 0);
-  }, [cart]);
-
-  const handleClearCart = useCallback(() => {
-    clearCart();
-  }, [clearCart]);
+  const totalPriceCartProducts = useMemo(
+    () =>
+      cart.reduce(
+        (acc, item) => acc + item.pricePublic * item.quantity,
+        0
+      ),
+    [cart]
+  );
 
   return {
     cart,
-    handleAddCart,
-    handleRemoveCart,
-    handleClearCart,
-    handleProductInCart,
     totalCartProducts,
     totalPriceCartProducts,
+    handleAddCart,
     handleIncreaseQuantityProduct,
     handleDecreaseQuantityProduct,
+    removeCart,
+    clearCart,
+    handleProductInCart,
   };
 };
 
