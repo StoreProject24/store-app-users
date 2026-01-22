@@ -9,10 +9,12 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
-export function BreadcrumbWithCustomSeparator() {
+export function BreadcrumbWithCustomSeparator({nameProduct}: { nameProduct: string}) {
   const location = useLocation();
   const { pathname } = location;
   const pathnames = pathname.split('/').filter(Boolean);
+
+  console.log("pathname ", pathname)
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -20,24 +22,19 @@ export function BreadcrumbWithCustomSeparator() {
           <BreadcrumbLink asChild>
             <Link to="/">Inicio</Link>
           </BreadcrumbLink>
+          <BreadcrumbSeparator>
+          <SlashIcon />
+        </BreadcrumbSeparator>
+          <BreadcrumbLink asChild>
+            <Link to="/products">Productos</Link>
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator>
           <SlashIcon />
         </BreadcrumbSeparator>
-        {pathnames.map((name, index) => (
-          <>
-            <BreadcrumbItem key={name}>
-              <BreadcrumbLink asChild>
-                <Link to={`/${name}`}>{name.charAt(0).toUpperCase() + name.slice(1)}</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            {index < pathnames.length - 1 && (
-              <BreadcrumbSeparator>
-                <SlashIcon />
-              </BreadcrumbSeparator>
-            )}
-          </>
-        ))}
+        <BreadcrumbLink asChild>
+            <Link to={`/products/${pathnames[pathnames.length - 1]}`}>{nameProduct}</Link>
+          </BreadcrumbLink>
       </BreadcrumbList>
     </Breadcrumb>
   );

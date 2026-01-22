@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
 import QuantitySelector from '@/components/quantitySelector';
 import { Button } from '@/components/ui/button';
 import formatPrice from '@/lib/formatPrice';
@@ -32,39 +33,61 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
     ? variantQuantities[selectedCombination.id] ?? 1
     : 1;
 
-    const variantName = useMemo(() => {
-      if (!selectedCombination) return '';
-    
-      return selectedCombination.values
-        .map(v => {
-          const type = product.variantTypes.find(t => t.id === v.option.typeId);
-          return type
-            ? `${type.name}: ${v.option.name}`
-            : v.option.name;
-        })
-        .join(' - ');
-    }, [selectedCombination, product.variantTypes]);
+  const variantName = useMemo(() => {
+    if (!selectedCombination) return '';
+
+    return selectedCombination.values
+      .map(v => {
+        const type = product.variantTypes.find(t => t.id === v.option.typeId);
+        return type
+          ? `${type.name}: ${v.option.name}`
+          : v.option.name;
+      })
+      .join(' - ');
+  }, [selectedCombination, product.variantTypes]);
 
   return (
     <>
-      <p className="my-2 font-semibold underline">Variantes</p>
-      {product?.variantTypes.map(type => (
-        <div key={type.id} className="py-1">
+      <motion.p
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="my-2 font-semibold underline"
+      >
+        Variantes
+      </motion.p>
+
+      {product?.variantTypes.map((type, typeIndex) => (
+        <motion.div
+          key={type.id}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: typeIndex * 0.1 }}
+          className="py-1"
+        >
           <p className="font-semibold mb-2">{type.name}</p>
-          <div className="flex gap-2">
-            {type.options.map(option => {
+          <div className="flex gap-2 flex-wrap">
+            {type.options.map((option, optionIndex) => {
               const isSelected = selectedOptions[type.id] === option.id;
               const isAvailable = isOptionAvailable(type.id, option.id);
               return (
-                <button
+                <motion.button
                   key={option.id}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: typeIndex * 0.1 + optionIndex * 0.05,
+                  }}
+                  whileHover={isAvailable ? { scale: 1.05 } : {}}
+                  whileTap={isAvailable ? { scale: 0.95 } : {}}
                   onClick={() => {
                     if (!isAvailable) return;
                     setSelectedOptions(prev => ({
                       ...prev,
                       [type.id]: option.id,
                     }));
-                    handleVariantQuantity(0, "reset")
+                    handleVariantQuantity(0, 'reset');
                   }}
                   className={cn(
                     'px-3 py-1 rounded border text-sm transition',
@@ -74,25 +97,42 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
                   )}
                 >
                   {option.name}
-                </button>
+                </motion.button>
               );
             })}
           </div>
-        </div>
+        </motion.div>
       ))}
+
       {selectedCombination && selectedCombination.quantity > 1 && (
-        <QuantitySelector
-          quantity={currentQuantity}
-          disabled={currentQuantity >= selectedCombination.quantity}
-          handleQuantity={(type) => {
-            handleVariantQuantity(selectedCombination.id, type)
-          }}
-        />
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <QuantitySelector
+            quantity={currentQuantity}
+            disabled={currentQuantity >= selectedCombination.quantity}
+            handleQuantity={(type) => {
+              handleVariantQuantity(selectedCombination.id, type);
+            }}
+          />
+        </motion.div>
       )}
 
-      <div className="border-t pt-4 space-y-1">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="border-t pt-4 space-y-1"
+      >
         {selectedCombination ? (
-          <>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
             <p className="text-2xl font-bold">{formatPrice(selectedCombination.pricePublic)}</p>
             <div className="flex flex-row justify-between mb-2">
               <small className="text-sm text-gray-500 font-semibold">
@@ -102,35 +142,45 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
                 SKU: <small className="font-normal text-sm">{selectedCombination.sku}</small>
               </small>
             </div>
-          </>
+          </motion.div>
         ) : (
-          <p className="text-gray-600 text-sm my-2">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="text-gray-600 text-sm my-2"
+          >
             Selecciona todas las opciones para ver el precio
-          </p>
+          </motion.p>
         )}
-      </div>
-      <Button
-        disabled={!selectedCombination || selectedCombination.quantity === 0}
-        className="w-full"
-        onClick={() => {
-          if (!selectedCombination) return;
-          console.log("selectedCombination.values[0] ", selectedCombination)
-          handleAddCart({
-            productId: product.id,
-            combinationId: selectedCombination.id,
-            name: product.name,
-            pricePublic: selectedCombination.pricePublic,
-            quantity: currentQuantity,
-            variantName,
-            stock: selectedCombination.quantity,
-            image: product.images?.[0]?.urlImage,
-            categoryId: product.categoryId,
-          });
-          
-        }}
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.3 }}
       >
-        Agregar al carrito
-      </Button>
+        <Button
+          disabled={!selectedCombination || selectedCombination.quantity === 0}
+          className="w-full"
+          onClick={() => {
+            if (!selectedCombination) return;
+            handleAddCart({
+              productId: product.id,
+              combinationId: selectedCombination.id,
+              name: product.name,
+              pricePublic: selectedCombination.pricePublic,
+              quantity: currentQuantity,
+              variantName,
+              stock: selectedCombination.quantity,
+              image: product.images?.[0]?.urlImage,
+              categoryId: product.categoryId,
+            });
+          }}
+        >
+          Agregar al carrito
+        </Button>
+      </motion.div>
     </>
   );
 };

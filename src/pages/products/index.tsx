@@ -1,9 +1,10 @@
 import { useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router';
+import { motion } from 'framer-motion';
 import useGetProducts from '@/queries/products';
 import Spinner from '@/components/ui/spinner';
 import Loading from '@/components/loading';
-import ProductCardSkeleton from './components/skeletonProducts';
+import ProductCardSkeleton from '@/components/skeletonProductCards';
 import ListProducts from './components/listProducts';
 import Filters from './components/filters';
 import EmptyProducts from './components/emptyProducts';
@@ -59,10 +60,24 @@ const Products = () => {
 
   return (
     <section className="px-8 pb-4 flex flex-col justify-center">
-      <Filters handleSearch={handleSearch} handleCategories={handleCategories} />
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <Filters handleSearch={handleSearch} handleCategories={handleCategories} />
+      </motion.div>
       <div className="flex flex-col justify-center items-center">
         <Loading isLoading={isLoadingProducts} component={<ProductCardSkeleton limit={14} />}>
-          {products.length === 0 && !isLoadingProducts && <EmptyProducts />}
+          {products.length === 0 && !isLoadingProducts && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <EmptyProducts />
+            </motion.div>
+          )}
           <ListProducts
             products={products}
             lastElementRef={lastElementRef as unknown as React.RefObject<HTMLDivElement>}
@@ -70,7 +85,15 @@ const Products = () => {
           />
         </Loading>
       </div>
-      {isFetching && <Spinner />}
+      {isFetching && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <Spinner />
+        </motion.div>
+      )}
     </section>
   );
 };
