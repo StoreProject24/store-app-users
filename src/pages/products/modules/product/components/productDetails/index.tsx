@@ -1,12 +1,9 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import formatPrice from '@/lib/formatPrice';
 import { Product } from '@/types/products';
-import QuantitySelector from '@/components/quantitySelector';
 import useCart from '@/hooks/useCart';
 import ProductWithVariants from '../variants';
 import { CartItem } from '@/types/cart';
+import ProductWithoutVariants from '../productWithoutVariants';
 
 const ProductDetails = ({ product }: { product: Product | null }) => {
   const [quantity, setQuantity] = useState<number>(0);
@@ -55,66 +52,20 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
     });
   };
 
-  const addProductToCart = (item: Omit<CartItem, 'key'>) => {
+  const confirmAddToCart = (item: Omit<CartItem, 'key'>) => {
     handleAddCart(item);
   };
 
-  const RenderView = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.6 }}
-      className="flex flex-col gap-5 w-full sm:flex-col justify-between"
-    >
-      <motion.h5
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, delay: 0.7 }}
-        className="text-xl font-bold font-poppins"
-      >
-        {formatPrice(product?.pricePublic || 0)}
-      </motion.h5>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.8 }}
-        className="flex flex-col gap-5 w-full px-2 h-108 overflow-y-auto"
-      >
-        <QuantitySelector
-          quantity={quantity}
-          disabled={false}
-          handleQuantity={v => handleQuantity(v, 0)}
-        />
-        <Button
-          className="w-full"
-          onClick={() => {
-            if (!product?.id) return;
-            handleAddCart({
-              productId: product.id,
-              name: product.name,
-              pricePublic: product.pricePublic,
-              quantity,
-              stock: product.quantity,
-              image: product.images?.[0]?.urlImage,
-              categoryId: product.categoryId,
-            });
-          }}
-        >
-          Agregar al carrito
-        </Button>
-      </motion.div>
-    </motion.div>
-  );
-
+ 
   return product?.variantTypes.length ? (
     <ProductWithVariants
       product={product}
       variantQuantities={variantQuantities}
       handleVariantQuantity={handleVariantQuantity}
-      handleAddCart={addProductToCart}
+      handleAddCart={confirmAddToCart}
     />
   ) : (
-    <RenderView />
+    <ProductWithoutVariants handleAddCart={handleAddCart} handleQuantity={handleQuantity} product={product} quantity={quantity} />
   );
 };
 

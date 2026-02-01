@@ -3,9 +3,11 @@ import useCart from '@/hooks/useCart';
 import { Button } from '../ui/button';
 import formatPrice from '@/lib/formatPrice';
 import useGetNameCategory from '@/hooks/useGetNameCategory';
+import useCreateSale from '@/hooks/useCreateSale';
 const Cart = () => {
+  const {createSale} = useCreateSale()
   const { getNameCategory } = useGetNameCategory();
-  const { cart, removeCart, totalPriceCartProducts } = useCart();
+  const { cart, removeCart, totalPriceCartProducts, clearCart } = useCart();
 
   const formatOrder = () => {
     const itemsList = cart
@@ -23,11 +25,13 @@ const Cart = () => {
     );
   };
 
-  const handleSendOrder = () => {
+  const handleSendOrder = async () => {
     const order = formatOrder();
     const phone = '573227537385';
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
-    window.open(url, '_blank');
+    await createSale()
+    clearCart()
+    // const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
+    // window.open(url, '_blank');
   };
 
   return (

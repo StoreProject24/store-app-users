@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from "react-hot-toast"
 import './App.css';
 import Home from './pages/home';
 import Products from './pages/products';
@@ -28,6 +29,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </StoreContext>
+      <Toaster position="top-right" />
     </QueryClientProvider>
   );
 }
