@@ -56,8 +56,10 @@ const CardProduct = ({
           <p className="font-medium text-black w-full text-ellipsis overflow-hidden font-poppins dark:text-white">
             {product.name}
           </p>
-          <small className="line-clamp-2 text-xs  text-gray-500 w-full font-poppins dark:text-white">
-            {product.description}
+          <small className="line-clamp-2 text-xs text-gray-500 w-full font-poppins dark:text-white" dangerouslySetInnerHTML={{
+            __html: product?.description ?? '',
+          }}>
+            
           </small>
         </div>
         <div className="flex flex-row justify-between items-center">
