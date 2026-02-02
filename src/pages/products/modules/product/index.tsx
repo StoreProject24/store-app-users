@@ -26,9 +26,12 @@ const Product = () => {
   return (
     <div className="px-4">
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 0.25,
+          ease: "easeOut",
+        }}
       >
         <BreadcrumbWithCustomSeparator nameProduct={product?.name} />
       </motion.div>
@@ -62,9 +65,8 @@ const Product = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setActiveImage(index)}
-                    className={`w-20 h-20 sm:w-32 sm:h-32 border-2 rounded-lg cursor-pointer aspect-square transition-colors ${
-                      isActive ? 'border-gray-500' : ''
-                    }`}
+                    className={`w-20 h-20 sm:w-32 sm:h-32 border-2 rounded-lg cursor-pointer aspect-square transition-colors ${isActive ? 'border-gray-500' : ''
+                      }`}
                   >
                     <img
                       src={image.urlImage}
