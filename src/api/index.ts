@@ -12,6 +12,7 @@ const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
+    "x-store-domain": window.location.hostname,
   },
 })
 
