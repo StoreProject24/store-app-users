@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import useGetProduct from '@/queries/products/product';
 import { BreadcrumbWithCustomSeparator } from './components/breadcrum';
 import ProductsRelated from './components/productsRelated';
@@ -43,15 +43,20 @@ const Product = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="w-full h-80 md:w-1/2 sm:h-160 rounded-xl"
         >
-          <motion.img
-            key={activeImage}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            src={product?.images?.[activeImage]?.urlImage ?? 'https://placehold.co/600x400'}
-            alt={product?.name}
-            className="w-full h-2/3 object-cover rounded-xl border-2"
-          />
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={activeImage}
+              src={product?.images?.[activeImage]?.urlImage}
+              alt={product?.name}
+              loading="lazy"
+              decoding="async"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="w-full h-2/3 object-cover rounded-xl border-2"
+            />
+          </AnimatePresence>
           <div className="w-full overflow-auto pb-3">
             <div className="flex flex-row gap-1 sm:gap-5 sm:w-32 sm:h-36 mt-2">
               {product?.images.map((image, index) => {
