@@ -133,7 +133,7 @@ const Product = () => {
           <ProductDetails product={product ?? null} />
         </motion.div>
       </div>
-      <ImageGallery currentIndex={activeImage} images={product.images} isOpen={isOpenImageGallery} toggleVisibility={handleToggleOpenImageGallery}/>
+      <ImageGallery currentIndex={activeImage} images={product.images} isOpen={isOpenImageGallery} toggleVisibility={handleToggleOpenImageGallery} />
       <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -150,7 +150,7 @@ const Product = () => {
             style={{ originX: 1 }}
             className="border-t-2 border-gray-500 w-full rounded-full"
           />
-          <h2 className="text-2xl font-bold text-center mb-4 w-1/2 xl:w-full whitespace-nowrap">
+          <h2 className="text-lg sm:text-xl xl:text-2xl font-bold text-center mb-4 w-full sm:whitespace-normal xl:whitespace-nowrap">
             Productos relacionados
           </h2>
           <motion.div
