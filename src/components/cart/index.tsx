@@ -29,8 +29,8 @@ const Cart = () => {
   };
 
   const handleSendOrder = async () => {
-    const sale = await createSale();
-    console.log("sale ", sale)
+    const response = await createSale();
+    const sale = response.data.sale
     const order = formatOrder(sale?._id);
     const phone = '573227537285';
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
