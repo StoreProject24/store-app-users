@@ -32,7 +32,7 @@ const Cart = () => {
     const response = await createSale();
     const sale = response.data.sale
     const order = formatOrder(sale?._id);
-    const phone = '573227537285';
+    const phone = '573227537385';
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
     window.open(url, '_blank');
     queryClient.invalidateQueries({ queryKey: ['product'] });
