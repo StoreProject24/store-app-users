@@ -57,13 +57,11 @@ const CardProduct = ({
       </CardHeader>
       <CardContent className="m-0 p-1">
         <div className="flex-col justify-between gap-2 pb-2 h-16">
-          <p className="font-medium text-base text-black w-full text-ellipsis overflow-hidden font-poppins dark:text-white sm:text-xs">
+          <p className="font-medium text-black w-full font-poppins dark:text-white 
+              xs:text-xs sm:text-base 
+              line-clamp-2">
             {product.name}
           </p>
-          {/* <small className="line-clamp-2 text-xs text-gray-500 w-full font-poppins dark:text-white" dangerouslySetInnerHTML={{
-            __html: product?.description ?? '',
-          }}>
-          </small> */}
         </div>
         <div className="flex flex-row justify-between items-center">
           {
