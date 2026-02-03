@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Box, Trash } from 'lucide-react';
 import useCart from '@/hooks/useCart';
 import { Button } from '../ui/button';
@@ -5,6 +6,7 @@ import formatPrice from '@/lib/formatPrice';
 import useGetNameCategory from '@/hooks/useGetNameCategory';
 import useCreateSale from '@/hooks/useCreateSale';
 const Cart = () => {
+  const queryClient = useQueryClient()
   const {createSale} = useCreateSale()
   const { getNameCategory } = useGetNameCategory();
   const { cart, removeCart, totalPriceCartProducts, clearCart } = useCart();
@@ -29,9 +31,13 @@ const Cart = () => {
     const order = formatOrder();
     const phone = '573227537385';
     await createSale()
+    queryClient.invalidateQueries({ queryKey: ['product'] })
+    queryClient.invalidateQueries({ queryKey: ['products'] })
+    setTimeout(() => {
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
+      window.open(url, '_blank');
+    }, 1500)
     clearCart()
-    // const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
-    // window.open(url, '_blank');
   };
 
   return (

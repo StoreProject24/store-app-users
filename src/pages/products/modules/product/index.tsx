@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useParams } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import useGetProduct from '@/queries/products/product';
 import { BreadcrumbWithCustomSeparator } from './components/breadcrum';
 import ProductsRelated from './components/productsRelated';
 import ProductDetails from './components/productDetails';
+import ImageGallery from '@/components/imageGallery';
 
 const Product = () => {
   const { id } = useParams();
   const { product, isLoading } = useGetProduct(Number(id));
+  const [isOpenImageGallery, setIsOpenImageGallery] = useState<boolean>(false)
   const [activeImage, setActiveImage] = useState<number>(0);
+
+  const handleToggleOpenImageGallery = useCallback((newState: boolean) => {
+    setIsOpenImageGallery(newState)
+  }, [])
 
   if (isLoading) {
     return (
@@ -48,6 +54,10 @@ const Product = () => {
               key={activeImage}
               src={product?.images?.[activeImage]?.urlImage}
               alt={product?.name}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleToggleOpenImageGallery(!isOpenImageGallery)
+              }}
               loading="lazy"
               decoding="async"
               initial={{ opacity: 0 }}
@@ -123,7 +133,7 @@ const Product = () => {
           <ProductDetails product={product ?? null} />
         </motion.div>
       </div>
-
+      <ImageGallery currentIndex={activeImage} images={product.images} isOpen={isOpenImageGallery} toggleVisibility={handleToggleOpenImageGallery}/>
       <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
