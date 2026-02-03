@@ -57,12 +57,6 @@ const Contact = () => {
         'noopener,noreferrer'
       );
     }
-    return window.open(
-      // @ts-ignore
-      item.value,
-      '_blank',
-      'noopener,noreferrer'
-    );
   }, []);
 
   return (

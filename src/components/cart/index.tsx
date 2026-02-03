@@ -11,7 +11,7 @@ const Cart = () => {
   const { getNameCategory } = useGetNameCategory();
   const { cart, removeCart, totalPriceCartProducts, clearCart } = useCart();
 
-  const formatOrder = () => {
+  const formatOrder = (idSale: string) => {
     const itemsList = cart
       .map(
         item =>
@@ -19,6 +19,7 @@ const Cart = () => {
       )
       .join('\n');
     return (
+      `🧾 *'🔢Id de venta: ${idSale}*\n\n` +
       `🧾 *Factura de compra*\n\n` +
       `👤 Cliente: *Lina Surmay*\n` +
       `📅 Fecha: ${new Date().toLocaleDateString()}\n\n` +
@@ -28,17 +29,17 @@ const Cart = () => {
   };
 
   const handleSendOrder = async () => {
-    const order = formatOrder();
-    const phone = '573227537385';
-    await createSale()
-    queryClient.invalidateQueries({ queryKey: ['product'] })
-    queryClient.invalidateQueries({ queryKey: ['products'] })
-    setTimeout(() => {
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
-      window.open(url, '_blank');
-    }, 1500)
-    clearCart()
+    const sale = await createSale();
+    console.log("sale ", sale)
+    const order = formatOrder(sale?._id);
+    const phone = '573227537285';
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
+    window.open(url, '_blank');
+    queryClient.invalidateQueries({ queryKey: ['product'] });
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    clearCart();
   };
+  
 
   return (
     <div className="flex flex-col gap-2">
