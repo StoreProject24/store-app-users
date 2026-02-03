@@ -26,7 +26,7 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
     } else if (quantity > 1) {
       setQuantity(quantity - 1);
     } else {
-      setQuantity(1);
+      setQuantity(0);
     }
   };
 

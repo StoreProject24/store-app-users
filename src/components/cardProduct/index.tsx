@@ -5,6 +5,7 @@ import { Product } from '@/types/products';
 import formatPrice from '@/lib/formatPrice';
 import { CartItem } from '@/types/cart';
 import { ClassNameValue, twMerge } from 'tailwind-merge';
+import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 
 interface Props {
   product: Product;
@@ -13,14 +14,10 @@ interface Props {
   isProductInCart: boolean;
   cartItem?: CartItem;
   className?: ClassNameValue;
-  // handleProduct: (id: number) => void;
-  // handleAddCart: (product: Product) => void;
-  // handleDecreaseQuantityProduct: (id: number, product: Product) => void;
-  // handleIncreaseQuantityProduct: (product: Product) => void;
   handleProduct: (id: number) => void;
   handleAddCart: (product: Product) => void;
-  handleDecreaseQuantityProduct: (id: number, product: Product) => void;
-  handleIncreaseQuantityProduct: (product: Product) => void;
+  handleDecreaseQuantityProduct: (key: string, product: Product) => void;
+  handleIncreaseQuantityProduct: (key: string) => void;
 }
 
 const CardProduct = ({
@@ -35,8 +32,12 @@ const CardProduct = ({
   handleDecreaseQuantityProduct,
   handleIncreaseQuantityProduct,
 }: Props) => {
+  const hasVariants = product?.variantTypes.length > 0
   return (
-    <Card className={twMerge('p-4', className)} ref={isLast ? lastElementRef : null}>
+    <Card className={twMerge('p-4', className)} ref={isLast ? lastElementRef : null} onClick={(e) => {
+      e.stopPropagation()
+      handleProduct(product.id)
+    }}>
       <CardHeader className="m-0 p-0 relative">
         <img
           src={product.images?.[0]?.urlImage ?? 'https://placehold.co/600x400'}
@@ -46,14 +47,17 @@ const CardProduct = ({
         <Button
           variant="default"
           className="text-xs cursor-pointer p-4 h-7 rounded-4xl font-poppins absolute top-40 right-3 mt-2 dark:bg-black dark:text-white"
-          onClick={() => handleProduct(product.id)}
+          onClick={(e) => {
+            e.stopPropagation()
+            handleProduct(product.id)
+          }}
         >
           <ArrowRight className="w-4 h-4" />
         </Button>
       </CardHeader>
       <CardContent className="m-0 p-1">
         <div className="flex-col justify-between gap-2 pb-2 h-16">
-          <p className="font-medium text-black w-full text-ellipsis overflow-hidden font-poppins dark:text-white">
+          <p className="font-medium text-base text-black w-full text-ellipsis overflow-hidden font-poppins dark:text-white sm:text-xs">
             {product.name}
           </p>
           {/* <small className="line-clamp-2 text-xs text-gray-500 w-full font-poppins dark:text-white" dangerouslySetInnerHTML={{
@@ -62,42 +66,52 @@ const CardProduct = ({
           </small> */}
         </div>
         <div className="flex flex-row justify-between items-center">
-          <p className="text-xl font-bold text-black max-w-52 text-ellipsis overflow-hidden font-poppins dark:text-white">
-            {formatPrice(product.pricePublic)}
-          </p>
+          {
+            !hasVariants && (
+              <p className="text-xl font-bold text-black max-w-52 text-ellipsis overflow-hidden font-poppins dark:text-white xs:text-xs">
+                {formatPrice(product.pricePublic)}
+              </p>
+            )
+          }
           {isProductInCart && cartItem ? (
             <div className="flex flex-row justify-between items-center gap-2">
               <Button
                 variant="default"
-                className="text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white"
-                onClick={() => handleDecreaseQuantityProduct(product.id, product)}
+                className="z-10 text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white @max-xs:p-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDecreaseQuantityProduct(cartItem?.key, product)
+                }}
               >
                 -
               </Button>
               <p className="text-xs font-poppins dark:text-white">{cartItem.quantity}</p>
-              {cartItem.quantity < product.quantity && (
-                <Button
-                  variant="default"
-                  className="text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white"
-                  onClick={() => handleIncreaseQuantityProduct(product)}
-                >
-                  +
-                </Button>
-              )}
+              <Button
+                variant="default"
+                disabled={cartItem.quantity >= product.quantity}
+                className="z-10 text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white @max-xs:p-2"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleIncreaseQuantityProduct(cartItem.key)
+                }}
+              >
+                +
+              </Button>
             </div>
           ) : (
             <Button
               variant="default"
-              className="text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white"
-              onClick={() => {
-                if (product?.variantTypes?.length) {
+              className="z-10 text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white @max-xs:disabled"
+              onClick={(e) => {
+                e.stopPropagation()
+                if (hasVariants) {
                   handleProduct(product.id)
-                }else {
+                } else {
                   handleAddCart(product)
                 }
               }}
             >
-              {product?.variantTypes?.length ? "Variantes": "Agregar"}
+              {hasVariants ? "Variantes" : <ShoppingCartIcon color="text-white" />}
             </Button>
           )}
         </div>

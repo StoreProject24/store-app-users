@@ -37,7 +37,7 @@ const ProductWithoutVariants = ({product,quantity, handleQuantity, handleAddCart
       >
         <QuantitySelector
           quantity={quantity}
-          disabled={false}
+          disabled={quantity >= product.quantity}
           handleQuantity={v => handleQuantity(v, 0)}
         />
         <Button

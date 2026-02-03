@@ -57,11 +57,11 @@ const ListProducts = ({ products, lastElementRef, handleProduct }: Props) => {
                   categoryId: v.categoryId,
                 })
               }
-              handleDecreaseQuantityProduct={() =>
-                handleDecreaseQuantityProduct(product.id.toString())
+              handleDecreaseQuantityProduct={(v) =>
+                handleDecreaseQuantityProduct(v)
               }
-              handleIncreaseQuantityProduct={() =>
-                handleIncreaseQuantityProduct(product.id.toString())
+              handleIncreaseQuantityProduct={(v) =>
+                handleIncreaseQuantityProduct(v)
               }
             />
           </motion.div>

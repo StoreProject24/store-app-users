@@ -70,7 +70,7 @@ const Product = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setActiveImage(index)}
-                    className={`w-20 h-20 sm:w-32 sm:h-32 border-2 rounded-lg cursor-pointer aspect-square transition-colors ${isActive ? 'border-gray-500' : ''
+                    className={`w-20 h-20 sm:w-32 sm:h-32 border rounded-lg cursor-pointer aspect-square transition-colors ${isActive ? 'border-gray-500' : ''
                       }`}
                   >
                     <img

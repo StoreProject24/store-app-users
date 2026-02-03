@@ -43,7 +43,7 @@ const useCart = () => {
 
   const handleDecreaseQuantityProduct = useCallback(
     (key: string) => {
-      const item = cart.find(i => i.key === key);
+      const item = cart.find(i => i.key == key);
       if (!item) return;
 
       if (item.quantity === 1) {
@@ -63,7 +63,6 @@ const useCart = () => {
     [cart]
   );
   
-
   // 🧮 TOTALES
   const totalCartProducts = cart.length
 
