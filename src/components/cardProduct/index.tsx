@@ -120,7 +120,9 @@ const CardProduct = ({
                 }
               }}
             >
-              {hasVariants ? "Variantes" : <ShoppingCartIcon color="text-white" />}
+              {
+                hasVariants ? isEqualPrice ? <></> : "Variantes" : <ShoppingCartIcon color="text-white" />
+              }
             </Button>
           )}
         </div>
