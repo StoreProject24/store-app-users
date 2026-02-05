@@ -33,6 +33,15 @@ const CardProduct = ({
   handleIncreaseQuantityProduct,
 }: Props) => {
   const hasVariants = product?.variantTypes?.length > 0
+  if (product.id == 39){
+    console.log({
+      hasVariants,
+      product: {
+        id: product.id,
+        variantTypes: product.variantTypes
+      }
+    })
+  }
   return (
     <Card className={twMerge('p-4', className)} ref={isLast ? lastElementRef : null} onClick={(e) => {
       e.stopPropagation()
