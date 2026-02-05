@@ -137,7 +137,7 @@ export default function Categories() {
                       <motion.img
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.4 }}
-                        src={category.urlImage || "https://placehold.co/600x400"}
+                        src={category.urlImage ?? 'https://placehold.co/600x400'}
                         alt={category.name}
                         className="object-cover w-full h-full rounded-2xl"
                       />
