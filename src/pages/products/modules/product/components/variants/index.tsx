@@ -6,6 +6,7 @@ import formatPrice from '@/lib/formatPrice';
 import { cn } from '@/lib/utils';
 import { Product } from '@/types/products';
 import { CartItem } from '@/types/cart';
+import useCart from '@/hooks/useCart';
 
 interface Props {
   product: Product;
@@ -16,7 +17,7 @@ interface Props {
 
 const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity, handleAddCart }: Props) => {
   const [selectedOptions, setSelectedOptions] = useState<Record<number, number>>({});
-
+  const { handleProductInCart } = useCart();
   const selectedCombination = useMemo(() => {
     return product?.variantCombinations.find(comb =>
       comb.values.every(v => selectedOptions[v.option.typeId] === v.optionId)
@@ -28,10 +29,6 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
       comb.values.some(v => v.option.typeId === typeId && v.optionId === optionId)
     );
   };
-
-  const currentQuantity = selectedCombination
-    ? variantQuantities[selectedCombination.id] ?? 1
-    : 1;
 
   const variantName = useMemo(() => {
     if (!selectedCombination) return '';
@@ -45,6 +42,22 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
       })
       .join(' - ');
   }, [selectedCombination, product.variantTypes]);
+
+
+  const variantInCart = selectedCombination
+    ? handleProductInCart(product.id, selectedCombination.id)
+    : undefined;
+
+  const availableStock = selectedCombination
+    ? selectedCombination.quantity - (variantInCart?.quantity ?? 0)
+    : 0;
+
+  const currentQuantity = selectedCombination
+    ? Math.min(
+      variantQuantities[selectedCombination.id] ?? 1,
+      availableStock
+    )
+    : 1;
 
   return (
     <>
@@ -87,7 +100,7 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
                       ...prev,
                       [type.id]: option.id,
                     }));
-                    handleVariantQuantity(0, 'reset');
+                    handleVariantQuantity(1, 'reset');
                   }}
                   className={cn(
                     'px-3 py-1 rounded border text-sm transition',
@@ -113,7 +126,7 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
         >
           <QuantitySelector
             quantity={currentQuantity}
-            disabled={currentQuantity >= selectedCombination.quantity}
+            disabled={currentQuantity >= availableStock}
             handleQuantity={(type) => {
               handleVariantQuantity(selectedCombination.id, type);
             }}
@@ -136,7 +149,7 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
             <p className="text-2xl font-bold">{formatPrice(selectedCombination.pricePublic)}</p>
             <div className="flex flex-row justify-between mb-2">
               <small className="text-sm text-gray-500 font-semibold">
-                Stock: <small className="font-normal text-sm">{selectedCombination.quantity}</small>
+                Stock: <small className="font-normal text-sm">{availableStock}</small>
               </small>
               <small className="text-sm text-gray-500 font-semibold">
                 SKU: <small className="font-normal text-sm">{selectedCombination.sku}</small>
@@ -161,7 +174,7 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
         transition={{ duration: 0.4, delay: 0.3 }}
       >
         <Button
-          disabled={!selectedCombination || selectedCombination.quantity === 0}
+          disabled={!selectedCombination || availableStock === 0}
           className="w-full"
           onClick={() => {
             if (!selectedCombination) return;
@@ -176,6 +189,7 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
               image: product.images?.[0]?.urlImage,
               categoryId: product.categoryId,
             });
+            handleVariantQuantity(selectedCombination.id, 'reset');
           }}
         >
           Agregar al carrito

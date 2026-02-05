@@ -121,7 +121,7 @@ const Product = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.5 }}
-            className="h-52 sm:h-64 overflow-y-auto"
+            className="max-h-52 sm:h-64 overflow-y-auto"
           >
             <div
               dangerouslySetInnerHTML={{

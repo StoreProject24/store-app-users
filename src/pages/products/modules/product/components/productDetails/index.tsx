@@ -6,13 +6,13 @@ import { CartItem } from '@/types/cart';
 import ProductWithoutVariants from '../productWithoutVariants';
 
 const ProductDetails = ({ product }: { product: Product | null }) => {
-  const [quantity, setQuantity] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>(1);
   const [variantQuantities, setVariantQuantities] = useState<Record<number, number>>({});
   const { handleAddCart } = useCart();
 
   const handleQuantity = (type: 'increment' | 'decrement' | 'reset' | 'load', value: number) => {
     if (type === 'reset') {
-      setQuantity(0);
+      setQuantity(value);
       return;
     }
     if (type === 'load') {
@@ -55,6 +55,8 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
   const confirmAddToCart = (item: Omit<CartItem, 'key'>) => {
     handleAddCart(item);
   };
+
+  console.log("product ", JSON.stringify(product))
 
  
   return product?.variantTypes.length ? (
