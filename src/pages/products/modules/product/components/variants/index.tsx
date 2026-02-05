@@ -61,15 +61,6 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
 
   return (
     <>
-      <motion.p
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="my-2 font-semibold underline"
-      >
-        Variantes
-      </motion.p>
-
       {product?.variantTypes.map((type, typeIndex) => (
         <motion.div
           key={type.id}
@@ -103,7 +94,7 @@ const ProductWithVariants = ({ product, variantQuantities, handleVariantQuantity
                     handleVariantQuantity(1, 'reset');
                   }}
                   className={cn(
-                    'px-3 py-1 rounded border text-sm transition',
+                    'px-3 py-1 rounded border text-sm transition cursor-pointer',
                     isSelected && 'bg-black text-white border-black',
                     !isSelected && isAvailable && 'bg-white hover:border-black',
                     !isAvailable && 'bg-gray-200 text-gray-400 border-gray-200 cursor-not-allowed'
