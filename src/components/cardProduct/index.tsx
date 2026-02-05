@@ -33,6 +33,17 @@ const CardProduct = ({
   handleIncreaseQuantityProduct,
 }: Props) => {
   const hasVariants = product?.variantTypes?.length > 0
+
+  const handleCheckEveryCombinatinationHasSameValue = () => {
+    if (product.variantTypes.length !== 1) return
+    const value = product.variantCombinations[0].pricePublic
+    const isEqualPrice = product?.variantCombinations.every((combination) => combination.pricePublic === value)
+    if (isEqualPrice) return value
+    return false
+  }
+
+  const isEqualPrice = handleCheckEveryCombinatinationHasSameValue()
+  
   return (
     <Card className={twMerge('p-4', className)} ref={isLast ? lastElementRef : null} onClick={(e) => {
       e.stopPropagation()
@@ -65,11 +76,11 @@ const CardProduct = ({
         </div>
         <div className="flex flex-row justify-between items-center">
           {
-            !hasVariants && (
+            !hasVariants || typeof isEqualPrice === 'number'  ? (
               <p className="text-xl font-bold text-black max-w-52 text-ellipsis overflow-hidden font-poppins dark:text-white xs:text-xs">
-                {formatPrice(product.pricePublic)}
-              </p>
-            )
+              {formatPrice(hasVariants ? isEqualPrice as number : product.pricePublic)}
+            </p>
+            ): null
           }
           {isProductInCart && cartItem ? (
             <div className="flex flex-row justify-between items-center gap-2">
