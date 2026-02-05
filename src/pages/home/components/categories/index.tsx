@@ -49,7 +49,7 @@ export default function Categories() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.06,
       },
     },
   };
@@ -117,9 +117,8 @@ export default function Categories() {
         <Carousel setApi={onInit} className="w-full">
           <motion.div
             variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
+            initial={false}
+            animate={categories.length ? 'visible' : 'hidden'}
           >
             <CarouselContent className="space-x-2">
               {categories.map((category, index) => (
@@ -130,11 +129,8 @@ export default function Categories() {
                   <motion.div
                     variants={itemVariants}
                     custom={index}
-                    whileHover={{ scale: 1.1 }}
-                    // whileHover={{
-                    //   scale: 1.03,
-                    //   transition: { duration: 0.3 },
-                    // }}
+                    whileHover={{ y: -6 }}
+                    style={{ willChange: 'transform' }}
                     className="w-full rounded-2xl flex flex-col mb-1 relative gap-0 p-1"
                   >
                     <div className="relative p-0 m-2 overflow-hidden rounded-2xl">

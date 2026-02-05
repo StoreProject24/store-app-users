@@ -63,8 +63,7 @@ const ProductsRelated = ({ productId, categoryId }: ProductsRelatedProps) => {
     <Loading isLoading={isLoading} component={<ProductCardSkeleton limit={5} />}>
       <motion.div
         variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
+        initial={false}
         viewport={{ once: true, amount: 0.1 }}
         className="w-full grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
       >

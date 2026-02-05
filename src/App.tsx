@@ -9,11 +9,9 @@ import Product from './pages/products/modules/product';
 import StoreContext from './context/store';
 import Contact from './pages/contact';
 import ScrollToTop from './components/scrollTop';
-// import { useScrollAnimation } from './hooks/useScrollAnimation';
 
 const queryClient = new QueryClient();
 function App() {
-  // useScrollAnimation()
   return (
     <QueryClientProvider client={queryClient}>
       <StoreContext>
