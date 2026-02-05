@@ -137,7 +137,7 @@ export default function Categories() {
                       <motion.img
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.4 }}
-                        src="https://placehold.co/600x400"
+                        src={category.urlImage || "https://placehold.co/600x400"}
                         alt={category.name}
                         className="object-cover w-full h-full rounded-2xl"
                       />
@@ -177,14 +177,13 @@ export default function Categories() {
             <motion.div
               key={index}
               initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ 
-                scale: index === currentIndex ? 1.2 : 1, 
-                opacity: 1 
+              animate={{
+                scale: index === currentIndex ? 1.2 : 1,
+                opacity: 1
               }}
               transition={{ duration: 0.3 }}
-              className={`w-3 h-3 rounded-full border border-black transition-colors ${
-                index === currentIndex ? 'bg-black' : 'bg-white'
-              }`}
+              className={`w-3 h-3 rounded-full border border-black transition-colors ${index === currentIndex ? 'bg-black' : 'bg-white'
+                }`}
             />
           ))}
         </motion.div>
