@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Cart from '../cart';
 import useCart from '@/hooks/useCart';
+import { useStoreStore } from '@/store/store';
 
 export default function Navbar() {
+  const {store} = useStoreStore()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const pathName = useLocation().pathname;
   const isProductPage = pathName.includes('/products');
@@ -35,7 +37,7 @@ export default function Navbar() {
   return (
     <header className="w-full px-8 py-3 bg-white flex justify-between items-center dark:bg-black">
       <Link to="/">
-        <h1 className="text-xl font-bold font-poppins">Mi Tienda</h1>
+        <h1 className="text-xl font-bold font-poppins">{store?.name}</h1>
       </Link>
       <nav className="hidden md:flex gap-6 items-center">
         {routes.map(route => (
