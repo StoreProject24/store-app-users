@@ -43,7 +43,7 @@ const CardProduct = ({
   }
 
   const isEqualPrice = handleCheckEveryCombinatinationHasSameValue()
-  
+
   return (
     <Card className={twMerge('p-4', className)} ref={isLast ? lastElementRef : null} onClick={(e) => {
       e.stopPropagation()
@@ -76,11 +76,11 @@ const CardProduct = ({
         </div>
         <div className="flex flex-row justify-between items-center">
           {
-            !hasVariants || typeof isEqualPrice === 'number'  ? (
+            !hasVariants || typeof isEqualPrice === 'number' ? (
               <p className="text-xl font-bold text-black max-w-52 text-ellipsis overflow-hidden font-poppins dark:text-white xs:text-xs">
-              {formatPrice(hasVariants ? isEqualPrice as number : product.pricePublic)}
-            </p>
-            ): null
+                {formatPrice(hasVariants ? isEqualPrice as number : product.pricePublic)}
+              </p>
+            ) : null
           }
           {isProductInCart && cartItem ? (
             <div className="flex flex-row justify-between items-center gap-2">
@@ -108,22 +108,24 @@ const CardProduct = ({
               </Button>
             </div>
           ) : (
-            <Button
-              variant="default"
-              className="z-10 text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white @max-xs:disabled"
-              onClick={(e) => {
-                e.stopPropagation()
-                if (hasVariants) {
-                  handleProduct(product.id)
-                } else {
-                  handleAddCart(product)
+            hasVariants && isEqualPrice ? <></> : (
+              <Button
+                variant="default"
+                className="z-10 text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white @max-xs:disabled"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (hasVariants) {
+                    handleProduct(product.id)
+                  } else {
+                    handleAddCart(product)
+                  }
+                }}
+              >
+                {
+                  hasVariants ? "Variantes" : <ShoppingCartIcon color="text-white" />
                 }
-              }}
-            >
-              {
-                hasVariants ? isEqualPrice ? <></> : "Variantes" : <ShoppingCartIcon color="text-white" />
-              }
-            </Button>
+              </Button>
+            )
           )}
         </div>
       </CardContent>
