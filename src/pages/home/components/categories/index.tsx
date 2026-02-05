@@ -130,10 +130,11 @@ export default function Categories() {
                   <motion.div
                     variants={itemVariants}
                     custom={index}
-                    whileHover={{
-                      scale: 1.03,
-                      transition: { duration: 0.3 },
-                    }}
+                    whileHover={{ scale: 1.1 }}
+                    // whileHover={{
+                    //   scale: 1.03,
+                    //   transition: { duration: 0.3 },
+                    // }}
                     className="w-full rounded-2xl flex flex-col mb-1 relative gap-0 p-1"
                   >
                     <div className="relative p-0 m-2 overflow-hidden rounded-2xl">
@@ -147,8 +148,6 @@ export default function Categories() {
                     </div>
                     <div className="relative flex flex-row justify-between items-center p-0 px-4">
                       <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
                       >
                         <Button
                           variant="default"
@@ -180,7 +179,7 @@ export default function Categories() {
         >
           {Array.from({ length: totalSlides }).map((_, index) => (
             <motion.div
-              key={`${index}-${currentIndex}`}
+              key={index}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ 
                 scale: index === currentIndex ? 1.2 : 1, 

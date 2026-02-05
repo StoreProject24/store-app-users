@@ -27,11 +27,9 @@ const FeatureProducts = () => {
   );
 
   const containerVariants = {
-    hidden: { opacity: 0 },
     visible: {
-      opacity: 1,
       transition: {
-        staggerChildren: 0.08,
+        staggerChildren: 0.04,
       },
     },
   };
@@ -47,8 +45,8 @@ const FeatureProducts = () => {
       scale: 1,
       transition: {
         type: 'spring',
-        damping: 20,
-        stiffness: 100,
+        damping: 18,
+        stiffness: 140,
       },
     },
   };
@@ -99,9 +97,8 @@ const FeatureProducts = () => {
           </motion.div>
           <motion.div
             variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.05 }}
+            initial={false}
+            animate={products?.length ? 'visible' : 'hidden'}
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 items-center justify-center w-full"
           >
             {products?.map((product: Product) => {
