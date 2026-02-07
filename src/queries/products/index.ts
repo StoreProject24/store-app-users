@@ -24,7 +24,7 @@ const useGetProducts = () => {
     queryKey: ['products', page, search, categories.join(',')],
     queryFn: () => productService.getProductsByPage(page, search, categories),
     enabled: hasMore,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
   });
 
   useEffect(() => {
