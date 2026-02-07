@@ -24,7 +24,7 @@ const useGetProducts = () => {
     queryKey: ['products', page, search, categories.join(',')],
     queryFn: () => productService.getProductsByPage(page, search, categories),
     enabled: hasMore,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -50,7 +50,11 @@ const useGetProducts = () => {
     if (page === 1) {
       setProducts(newProducts);
     } else {
-      setProducts(prev => [...prev, ...newProducts]);
+      setProducts(prev => {
+        const ids = new Set(prev.map(p => p.id));
+        const filtered = newProducts.filter(p => !ids.has(p.id));
+        return [...prev, ...filtered];
+      });
     }
     setHasMore(true);
 
