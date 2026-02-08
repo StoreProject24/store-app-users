@@ -53,4 +53,4 @@ RUN chmod +x /app/inject-env.sh
 EXPOSE 8080
 
 # Comando para iniciar la aplicación
-CMD sh -c "echo 'window.ENV = { VITE_API_URL: \"'${VITE_API_URL}'\" };' > /app/dist/env-config.js && serve -s dist -l ${PORT:-8080}"
+CMD sh -c "echo 'window.ENV = { VITE_API_URL: \"'${VITE_API_URL}'\", VITE_API_STORES_KEY: \"'${VITE_API_STORES_KEY}'\" };' > /app/dist/env-config.js && serve -s dist -l ${PORT:-8080}"
