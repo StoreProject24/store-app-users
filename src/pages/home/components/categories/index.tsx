@@ -139,7 +139,7 @@ export default function Categories() {
                         transition={{ duration: 0.4 }}
                         src={category.urlImage || 'https://placehold.co/600x480'}
                         alt={category.name}
-                        className="object-cover w-full h-full rounded-2xl"
+                        className="object-cover w-full h-52 rounded-2xl"
                       />
                     </div>
                     <div className="relative flex flex-row justify-between items-center p-0 px-4">
