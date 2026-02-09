@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Box, Trash } from 'lucide-react';
 import useCart from '@/hooks/useCart';
@@ -5,9 +6,11 @@ import { Button } from '../ui/button';
 import formatPrice from '@/lib/formatPrice';
 import useGetNameCategory from '@/hooks/useGetNameCategory';
 import useCreateSale from '@/hooks/useCreateSale';
+import LoadingIndicator from '../loadingIndicator';
 const Cart = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const queryClient = useQueryClient()
-  const {createSale} = useCreateSale()
+  const { createSale } = useCreateSale()
   const { getNameCategory } = useGetNameCategory();
   const { cart, removeCart, totalPriceCartProducts, clearCart } = useCart();
 
@@ -29,17 +32,24 @@ const Cart = () => {
   };
 
   const handleSendOrder = async () => {
-    const response = await createSale();
-    const sale = response.data.sale
-    const order = formatOrder(sale?._id);
-    const phone = '573227537385';
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
-    window.open(url, '_blank');
-    queryClient.invalidateQueries({ queryKey: ['product'] });
-    queryClient.invalidateQueries({ queryKey: ['products'] });
-    clearCart();
+    try {
+      setIsLoading(true)
+      const response = await createSale();
+      const sale = response.data.sale
+      const order = formatOrder(sale?._id);
+      const phone = '573227537385';
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(order)}`;
+      window.open(url, '_blank');
+      queryClient.invalidateQueries({ queryKey: ['product'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      clearCart();
+    } catch (error) {
+
+    } finally {
+      setIsLoading(false)
+    }
   };
-  
+
 
   return (
     <div className="flex flex-col gap-2">
@@ -62,7 +72,7 @@ const Cart = () => {
                 <div className="flex flex-row justify-between items-center w-full gap-2">
                   <div className="flex-col justify-start items-center gap-2 w-36">
                     <p className="text-sm font-medium font-poppins dark:text-white text-ellipsis  overflow-hidden">
-                      {item.name} {item.combinationId && `~ ${item.variantName}`} 
+                      {item.name} {item.combinationId && `~ ${item.variantName}`}
                     </p>
                     <p className="text-xs font-poppins text-gray-500 text-ellipsis text-nowrap overflow-hidden">
                       {getNameCategory(item.categoryId)}
@@ -100,10 +110,13 @@ const Cart = () => {
             </div>
             <Button
               variant="default"
+              disabled={isLoading}
               className="text-xs cursor-pointer p-4 rounded-4xl font-poppins dark:bg-black dark:text-white"
               onClick={handleSendOrder}
             >
-              Enviar pedido
+              {
+                isLoading ? <LoadingIndicator /> : "Enviar pedido"
+              }
             </Button>
           </div>
         </>
