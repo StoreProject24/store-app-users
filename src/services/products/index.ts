@@ -5,7 +5,7 @@ class ProductsService {
     const response = await api.get(ENDPOINTS.products.get, {
       params: {
         page,
-        limit: 10,
+        limit: 20,
         search,
         categoryIds: categoryIds.join(','),
       },
