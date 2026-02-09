@@ -55,9 +55,6 @@ const ProductDetails = ({ product }: { product: Product | null }) => {
   const confirmAddToCart = (item: Omit<CartItem, 'key'>) => {
     handleAddCart(item);
   };
-
-  console.log("product ", JSON.stringify(product))
-
  
   return product?.variantTypes.length ? (
     <ProductWithVariants
