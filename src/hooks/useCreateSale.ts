@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import useCart from "./useCart";
 import SaleService from "@/services/sales";
-import { toastAppSuccess } from "@/utils/toast";
+import { toastAppError, toastAppSuccess } from "@/utils/toast";
 import useTranslation from "./useTranslation";
 
 
@@ -13,11 +13,10 @@ const useCreateSale = () => {
     const createSale = useMutation({
         mutationFn: () => saleService.createSale(cart, totalPriceCartProducts),
         onSuccess: (data) => {
-            
             toastAppSuccess(t("sucessSale"))
         },
         onError: (error) => {
-            toastAppSuccess(t("errorCreateSale"))
+            toastAppError(t("errorCreateSale"))
         }
     })
 
