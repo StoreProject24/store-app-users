@@ -40,7 +40,6 @@ function MultiSelect({ options, selected, setSelected }: Readonly<MultiSelectPro
             key={o.value}
             checked={selected.includes(o.value)}
             onCheckedChange={() => toggle(o.value)}
-            // onSelect={e => e.preventDefault()} // evita que se cierre
           >
             {o.label}
           </DropdownMenuCheckboxItem>

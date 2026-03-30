@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Box, Trash } from 'lucide-react';
 import useCart from '@/hooks/useCart';
-import { Button } from '../ui/button';
-import formatPrice from '@/lib/formatPrice';
 import useGetNameCategory from '@/hooks/useGetNameCategory';
 import useCreateSale from '@/hooks/useCreateSale';
+import formatPrice from '@/lib/formatPrice';
+import { Button } from '../ui/button';
 import LoadingIndicator from '../loadingIndicator';
 const Cart = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)

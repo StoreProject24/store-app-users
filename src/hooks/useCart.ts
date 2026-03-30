@@ -12,7 +12,6 @@ const useCart = () => {
     decreaseQuantityProduct,
   } = useCartStore();
 
-  // ➕ AGREGAR AL CARRITO
   const handleAddCart = useCallback(
     (item: Omit<CartItem, 'key'>) => {
       const key = getCartKey(item.productId, item.combinationId);
@@ -30,7 +29,6 @@ const useCart = () => {
     [cart, addCart, increaseQuantityProduct]
   );
 
-  // ➕➖ CANTIDAD
   const handleIncreaseQuantityProduct = useCallback(
     (key: string) => {
       const item = cart.find(i => i.key === key);
@@ -63,7 +61,6 @@ const useCart = () => {
     [cart]
   );
   
-  // 🧮 TOTALES
   const totalCartProducts = cart.length
 
   const totalPriceCartProducts = useMemo(
