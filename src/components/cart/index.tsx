@@ -4,6 +4,7 @@ import { Box, Trash } from 'lucide-react';
 import useCart from '@/hooks/useCart';
 import useGetNameCategory from '@/hooks/useGetNameCategory';
 import useCreateSale from '@/hooks/useCreateSale';
+import useAnalytics from '@/hooks/useAnalytics';
 import formatPrice from '@/lib/formatPrice';
 import { Button } from '../ui/button';
 import LoadingIndicator from '../loadingIndicator';
@@ -13,6 +14,7 @@ const Cart = () => {
   const { createSale } = useCreateSale()
   const { getNameCategory } = useGetNameCategory();
   const { cart, removeCart, totalPriceCartProducts, clearCart } = useCart();
+  const { track } = useAnalytics();
 
   const formatOrder = (idSale: string) => {
     const itemsList = cart
@@ -34,6 +36,10 @@ const Cart = () => {
   const handleSendOrder = async () => {
     try {
       setIsLoading(true)
+      track('checkout_started', {
+        saleTotal: totalPriceCartProducts,
+        saleItemsCount: cart.length,
+      });
       const response = await createSale();
       const sale = response.data.sale
       const order = formatOrder(sale?._id);
@@ -43,8 +49,9 @@ const Cart = () => {
       queryClient.invalidateQueries({ queryKey: ['product'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
       clearCart();
-    } catch (error) {
-
+      track('cart_cleared', { reason: 'sale_completed' });
+    } catch {
+      // sale error is handled by useCreateSale via toast
     } finally {
       setIsLoading(false)
     }
@@ -93,7 +100,16 @@ const Cart = () => {
                   className="flex  justify-center cursor-pointer items-center"
                   variant="ghost"
                   size="icon"
-                  onClick={() => removeCart(item.key)}
+                  onClick={() => {
+                    track('product_removed_from_cart', {
+                      productId: item.productId,
+                      productName: item.name,
+                      productPrice: item.pricePublic,
+                      combinationId: item.combinationId,
+                      quantity: item.quantity,
+                    });
+                    removeCart(item.key);
+                  }}
                 >
                   <Trash className="w-4 h-4" />
                 </Button>

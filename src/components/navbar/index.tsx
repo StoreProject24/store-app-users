@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import Cart from '../cart';
 import useCart from '@/hooks/useCart';
+import useAnalytics from '@/hooks/useAnalytics';
 import { useStoreStore } from '@/store/store';
 
 export default function Navbar() {
   const {store} = useStoreStore()
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const { track } = useAnalytics();
   const pathName = useLocation().pathname;
   const isProductPage = pathName.includes('/products');
   const isContactPage = pathName.includes('/contact');
@@ -49,7 +51,7 @@ export default function Navbar() {
             {route.label}
           </Link>
         ))}
-        <Sheet>
+        <Sheet onOpenChange={(open) => { if (open) track('cart_opened', { totalItems: totalCartProducts }); }}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="w-4 h-4" />
@@ -66,7 +68,7 @@ export default function Navbar() {
         </Sheet>
       </nav>
       <div className="md:hidden flex items-center gap-2">
-        <Sheet>
+        <Sheet onOpenChange={(open) => { if (open) track('cart_opened', { totalItems: totalCartProducts }); }}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="w-4 h-4" />

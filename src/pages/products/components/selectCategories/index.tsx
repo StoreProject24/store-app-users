@@ -4,6 +4,7 @@ import MultiSelect from '@/components/ui/multiselect';
 import { useCategoriesStore } from '@/store/categories';
 import { Label } from '@/components/ui/label';
 import useDebounce from '@/hooks/useDebounce';
+import useAnalytics from '@/hooks/useAnalytics';
 
 interface Props {
   handleCategories: (categories: string[]) => void;
@@ -13,6 +14,7 @@ interface Props {
 const SelectCategories = ({ handleCategories, ref }: Props) => {
   const { categories } = useCategoriesStore();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { track } = useAnalytics();
 
   const initialSelected = searchParams.get('categoryIds')?.split(',').filter(Boolean) ?? [];
   const [selected, setSelected] = useState<string[]>(initialSelected);
@@ -33,6 +35,10 @@ const SelectCategories = ({ handleCategories, ref }: Props) => {
 
   useEffect(() => {
     handleCategories(debouncedSelected.split(','));
+    const ids = debouncedSelected.split(',').filter(Boolean);
+    if (ids.length > 0) {
+      track('category_filter_applied', { categoryIds: ids });
+    }
   }, [debouncedSelected, handleCategories]);
 
   useImperativeHandle(ref, () => ({

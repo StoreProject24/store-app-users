@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useCartStore } from '@/store/cart';
 import { CartItem, getCartKey } from '@/types/cart';
+import useAnalytics from './useAnalytics';
 
 const useCart = () => {
   const {
@@ -12,6 +13,8 @@ const useCart = () => {
     decreaseQuantityProduct,
   } = useCartStore();
 
+  const { track } = useAnalytics();
+
   const handleAddCart = useCallback(
     (item: Omit<CartItem, 'key'>) => {
       const key = getCartKey(item.productId, item.combinationId);
@@ -20,13 +23,27 @@ const useCart = () => {
 
       if (!existing) {
         addCart({ ...item, key });
+        track('product_added_to_cart', {
+          productId: item.productId,
+          productName: item.name,
+          productPrice: item.pricePublic,
+          combinationId: item.combinationId,
+          quantity: item.quantity,
+        });
       } else {
         if (existing.quantity + item.quantity > existing.stock) return;
 
         increaseQuantityProduct(key);
+        track('product_added_to_cart', {
+          productId: item.productId,
+          productName: item.name,
+          productPrice: item.pricePublic,
+          combinationId: item.combinationId,
+          quantity: 1,
+        });
       }
     },
-    [cart, addCart, increaseQuantityProduct]
+    [cart, addCart, increaseQuantityProduct, track]
   );
 
   const handleIncreaseQuantityProduct = useCallback(
@@ -46,11 +63,17 @@ const useCart = () => {
 
       if (item.quantity === 1) {
         removeCart(key);
+        track('product_removed_from_cart', {
+          productId: item.productId,
+          productName: item.name,
+          productPrice: item.pricePublic,
+          combinationId: item.combinationId,
+        });
       } else {
         decreaseQuantityProduct(key);
       }
     },
-    [cart, removeCart, decreaseQuantityProduct]
+    [cart, removeCart, decreaseQuantityProduct, track]
   );
 
   const handleProductInCart = useCallback(

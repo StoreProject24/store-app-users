@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import useGetProduct from '@/queries/products/product';
+import useAnalytics from '@/hooks/useAnalytics';
 import { BreadcrumbWithCustomSeparator } from './components/breadcrum';
 import ProductsRelated from './components/productsRelated';
 import ProductDetails from './components/productDetails';
@@ -12,6 +13,17 @@ const Product = () => {
   const { product, isLoading } = useGetProduct(Number(id));
   const [isOpenImageGallery, setIsOpenImageGallery] = useState<boolean>(false)
   const [activeImage, setActiveImage] = useState<number>(0);
+  const { track } = useAnalytics();
+
+  // Trackea la vista del producto una vez que carga
+  useEffect(() => {
+    if (!product) return;
+    track('product_viewed', {
+      productId: product.id,
+      productName: product.name,
+      categoryId: product.categoryId,
+    });
+  }, [product?.id]);
 
   const handleToggleOpenImageGallery = useCallback((newState: boolean) => {
     setIsOpenImageGallery(newState)

@@ -4,6 +4,7 @@ import { Search, XCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import useDebounce from '@/hooks/useDebounce';
+import useAnalytics from '@/hooks/useAnalytics';
 
 interface Props {
   handleSearch: (search: string) => void;
@@ -15,6 +16,7 @@ const SearchProducts = ({ handleSearch, ref }: Props) => {
   const initialSearch = searchParams.get('search') ?? '';
   const [search, setSearch] = useState(initialSearch);
   const debouncedSearch = useDebounce(search, 700);
+  const { track } = useAnalytics();
 
   useEffect(() => {
     setSearchParams(prev => {
@@ -35,6 +37,10 @@ const SearchProducts = ({ handleSearch, ref }: Props) => {
 
   useEffect(() => {
     handleSearch(debouncedSearch);
+    // Solo trackea si hay texto real (evita eventos vacíos al limpiar)
+    if (debouncedSearch.trim()) {
+      track('search_used', { searchQuery: debouncedSearch.trim() });
+    }
   }, [debouncedSearch, handleSearch]);
 
   useImperativeHandle(ref, () => ({
