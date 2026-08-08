@@ -81,12 +81,18 @@ export default function PromoBanner() {
           </button>
 
           {store?.logoUrl && (
-            <div className="mb-5">
-              <img
-                src={store?.logoUrl}
-                alt="Logo"
-                className="h-16 w-auto object-contain"
-              />
+            <div className="mb-5 flex items-center justify-center">
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center ${
+                isDuringPromo
+                  ? 'bg-white/20'
+                  : 'bg-gray-100'
+              }`}>
+                <img
+                  src={store?.logoUrl}
+                  alt="Logo"
+                  className="h-16 w-16 object-contain"
+                />
+              </div>
             </div>
           )}
 
