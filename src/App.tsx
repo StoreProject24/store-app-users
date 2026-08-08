@@ -11,6 +11,7 @@ import Product from './pages/products/modules/product';
 import StoreContext from './context/store';
 import Contact from './pages/contact';
 import ScrollToTop from './components/scrollTop';
+import PromoBanner from './components/promoBanner';
 
 /** Trackea cada cambio de ruta como un pageview en PostHog */
 const PageViewTracker = () => {
@@ -44,6 +45,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        <PromoBanner />
       </StoreContext>
       <Toaster position="top-right" />
     </QueryClientProvider>

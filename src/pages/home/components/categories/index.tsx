@@ -121,7 +121,7 @@ export default function Categories() {
             animate={categories.length ? 'visible' : 'hidden'}
           >
             <CarouselContent className="space-x-2">
-              {categories.map((category, index) => (
+              {categories?.slice(0, 5).map((category, index) => (
                 <CarouselItem
                   key={category.id}
                   className="rounded-2xl basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
