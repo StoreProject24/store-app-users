@@ -6,6 +6,7 @@ export default function PromoBanner() {
   const { store } = useStoreStore();
   const [isVisible, setIsVisible] = useState(true);
   const [isDuringPromo, setIsDuringPromo] = useState(false);
+  const [isBeforePromo, setIsBeforePromo] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
 
   useEffect(() => {
@@ -19,7 +20,9 @@ export default function PromoBanner() {
     const month = today.getMonth() + 1;
 
     if (month === 8) {
-      if (day >= 14 && day <= 19) {
+      if (day < 14) {
+        setIsBeforePromo(true);
+      } else if (day >= 14 && day <= 19) {
         setIsDuringPromo(true);
       } else if (day > 19) {
         setIsVisible(false);
@@ -94,8 +97,17 @@ export default function PromoBanner() {
             <h2 className={`font-bold text-2xl ${
               isDuringPromo ? 'text-white' : 'text-gray-900'
             }`}>
-              ¡Estamos de aniversario!
+              {isDuringPromo
+                ? '¡Estamos de aniversario!'
+                : isBeforePromo
+                ? '¡Estaremos de aniversario!'
+                : '¡Estamos de aniversario!'}
             </h2>
+            {isBeforePromo && (
+              <p className={`text-sm mt-1 ${isDuringPromo ? 'text-white/80' : 'text-gray-500'}`}>
+                Desde el 14 de agosto
+              </p>
+            )}
           </div>
 
           <p className={`mb-6 text-sm leading-relaxed ${
@@ -103,7 +115,9 @@ export default function PromoBanner() {
           }`}>
             {isDuringPromo
               ? 'Disfruta de sorpresas especiales en nuestros productos. ¡Estas promociones especiales terminan el 19 de agosto! 🚀'
-              : '¡Estas promociones especiales terminan el 19 de agosto! 🚀'}
+              : isBeforePromo
+              ? '¡Prepárate para sorpresas especiales en nuestros productos a partir del 14 de agosto! 🎉'
+              : '¡Disfruta de sorpresas especiales en nuestros productos! 🚀'}
           </p>
 
           <div className="space-y-2 mb-6 text-sm">
